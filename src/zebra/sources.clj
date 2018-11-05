@@ -21,11 +21,17 @@
     .build))
 
 (defn source->map [source]
-  {:id        (.getId source)
-   :customer  (.getCustomer source)
-   :status    (.getStatus source)
-   :type      (.getType source)
-   :type-data (transform-type-data (.getTypeData source))})
+  (merge
+    {:id        (.getId source)
+     :customer  (.getCustomer source)
+     :status    (.getStatus source)
+     :type      (.getType source)
+     :type-data (transform-type-data (.getTypeData source))}
+    (when-let [redirect (.getRedirect source)]
+      {:redirect {:url            (.getUrl redirect)
+                  :return-url     (.getReturnUrl redirect)
+                  :status         (.getStatus redirect)
+                  :failure-reason (.getFailureReason redirect)}})))
 
 (defn create
   [params api-key]

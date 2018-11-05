@@ -13,18 +13,22 @@
 (deftest create-three-d-secure-source
   (let [card-source (sources/create
                       {:type  "card"
-                       :token (:valid-token tokens)}
+                       :token (:three-d-secure-required tokens)}
                       api-key)
-        three-d-secure-source (sources/create
-                                {:type           "three_d_secure"
-                                 :three_d_secure {:card (:id card-source)}
-                                 :redirect {:return_url "https://shop.example.com/crtA6B28E1"}
-                                 :amount         100
-                                 :currency       "gbp"}
-                                api-key)]
+
+        three-d-secure-source
+        (sources/create
+          {:type           "three_d_secure"
+           :three_d_secure {:card (:id card-source)}
+           :redirect       {:return_url "https://some-url.com"}
+           :amount         100
+           :currency       "gbp"}
+          api-key)]
     (testing "should be a valid source"
       (is (some? (:id three-d-secure-source)))
-      (is (map? (:type-data three-d-secure-source))))))
+      (is (map? (:type-data three-d-secure-source)))
+      (is (= (:status three-d-secure-source)
+            (:pending sources/status-codes))))))
 
 (deftest retrieve-source
   (let [source (sources/create {:type  "card"
