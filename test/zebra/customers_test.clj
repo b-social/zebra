@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [zebra.customers :as customers]
             [zebra.sources :as sources]
-            [zebra.helpers.constants :refer [api-key]]))
+            [zebra.helpers.constants :refer [api-key tokens]]))
 
 
 (deftest create-customer
@@ -18,7 +18,8 @@
 
 (deftest attach-source
   (let [customer (customers/create api-key)
-        source (sources/create {"type" "card" "token" "tok_visa"} api-key)
+        source (sources/create {:type  "card"
+                                :token (:valid-token tokens)} api-key)
         attached-source (customers/attach-source
                           (:id customer)
                           (:id source)

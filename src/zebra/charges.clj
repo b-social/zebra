@@ -1,6 +1,6 @@
 (ns zebra.charges
   (:refer-clojure :exclude [list update])
-
+  (:require [zebra.utils :refer [transform-params]])
   (:import [com.stripe.model Charge]
            [com.stripe.net RequestOptions]))
 
@@ -20,8 +20,12 @@
 
 (defn create
   [params api-key]
-  (charge->map (Charge/create params (api-key->request-options api-key))))
+  (charge->map (Charge/create
+                 (transform-params params)
+                 (api-key->request-options api-key))))
 
 (defn retrieve
   [id api-key]
-  (charge->map (Charge/retrieve id (api-key->request-options api-key))))
+  (charge->map (Charge/retrieve
+                 id
+                 (api-key->request-options api-key))))
