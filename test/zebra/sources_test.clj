@@ -7,7 +7,8 @@
   (let [source (sources/create {:type  "card"
                                 :token (:valid-token tokens)} api-key)]
     (testing "should be a valid source"
-      (is (some? (:id source))))))
+      (is (some? (:id source)))
+      (is (map? (:type-data source))))))
 
 (deftest retrieve-source
   (let [source (sources/create {:type  "card"

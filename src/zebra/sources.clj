@@ -1,8 +1,18 @@
 (ns zebra.sources
   (:refer-clojure :exclude [list update])
-  (:require [zebra.utils :refer [transform-params]])
+  (:require [zebra.utils :refer [transform-params
+                                 transform-type-data]])
   (:import [com.stripe.model Source]
            [com.stripe.net RequestOptions]))
+
+(def three-d-secure-requirements {:required      "required"
+                                  :recommended   "recommended"
+                                  :optional      "optional"
+                                  :not-supported "not_supported"})
+
+(def status-codes {:pending    "pending"
+                   :chargeable "chargeable"
+                   :failed     "failed"})
 
 (defn api-key->request-options
   [api-key]
@@ -11,9 +21,11 @@
     .build))
 
 (defn source->map [source]
-  {:id       (.getId source)
-   :customer (.getCustomer source)
-   :status   (.getStatus source)})
+  {:id        (.getId source)
+   :customer  (.getCustomer source)
+   :status    (.getStatus source)
+   :type      (.getType source)
+   :type-data (transform-type-data (.getTypeData source))})
 
 (defn create
   [params api-key]

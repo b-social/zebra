@@ -11,6 +11,8 @@
 (defn retrieve-charge [id api-key]
   (charges/retrieve id api-key))
 
+(def charge-status-codes charges/status-codes)
+
 ;Customers
 
 (defn create-customer [api-key]
@@ -29,3 +31,7 @@
 
 (defn retrieve-source [id api-key]
   (sources/retrieve id api-key))
+
+(def three-d-secure-requirements sources/three-d-secure-requirements)
+
+(def source-status-codes sources/status-codes)
