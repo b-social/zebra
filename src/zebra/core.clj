@@ -1,7 +1,8 @@
 (ns zebra.core
   (:require [zebra.charges :as charges]
             [zebra.customers :as customers]
-            [zebra.sources :as sources]))
+            [zebra.sources :as sources]
+            [zebra.ephemeral-keys :as ephemeral-keys]))
 
 ;Charges
 
@@ -35,3 +36,8 @@
 (def three-d-secure-requirements sources/three-d-secure-requirements)
 
 (def source-status-codes sources/status-codes)
+
+;Ephemeral Keys
+
+(defn create-ephemeral-key [params api-version api-key]
+  (ephemeral-keys/create params api-version api-key))
