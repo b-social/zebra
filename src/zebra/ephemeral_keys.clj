@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [list update])
   (:require [zebra.utils :refer [transform-params
                                  transform-type-data]])
-  (:import [com.stripe.model EphemeralKey]
+  (:import [com.stripe.model EphemeralKey EphemeralKey$AssociatedObject]
            [com.stripe.net RequestOptions]))
 
 (defn api-key->request-options
@@ -12,10 +12,19 @@
     (.setStripeVersion api-version)
     .build))
 
-(defn ephemeral-key->map [source]
-  {:id       (.getId source)
-   :expires  (.getExpires source)
-   :raw-json (.getRawJson source)})
+(defn associated-object->map [^EphemeralKey$AssociatedObject object]
+  {:id   (.getId object)
+   :type (.getType object)})
+
+(defn ephemeral-key->map [^EphemeralKey source]
+  {:id                 (.getId source)
+   :object             (.getObject source)
+   :associated-objects (map
+                         associated-object->map (.getAssociatedObjects source))
+   :created            (.getCreated source)
+   :expires            (.getExpires source)
+   :livemode           (.getLivemode source)
+   :secret             (.getSecret source)})
 
 (defn create
   [params api-version api-key]

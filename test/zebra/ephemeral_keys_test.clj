@@ -13,4 +13,11 @@
                         api-key)]
     (testing "should be a valid ephemeral key"
       (is (some? (:id ephemeral-key)))
-      (is (some? (:raw-json ephemeral-key))))))
+      (is (= "ephemeral_key" (:object ephemeral-key)))
+      (is (some
+            #(and (= "customer" (:type %)) (= (:id customer) (:id %)))
+            (:associated-objects ephemeral-key)))
+      (is (some? (:created ephemeral-key)))
+      (is (some? (:expires ephemeral-key)))
+      (is (false? (:livemode ephemeral-key)))
+      (is (some? (:secret ephemeral-key))))))
