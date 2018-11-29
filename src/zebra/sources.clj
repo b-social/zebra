@@ -35,9 +35,12 @@
 
 (defn create
   [params api-key]
-  (source->map (Source/create
-                 (transform-params params)
-                 (api-key->request-options api-key))))
+  (try
+    (source->map (Source/create
+                   (transform-params params)
+                   (api-key->request-options api-key)))
+    (catch Exception e
+      (throw (ex-info "Failed to create stripe source" {:error e})))))
 
 (defn retrieve
   [id api-key]

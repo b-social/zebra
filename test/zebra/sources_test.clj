@@ -1,7 +1,8 @@
 (ns zebra.sources-test
   (:require [clojure.test :refer :all]
             [zebra.sources :as sources]
-            [zebra.helpers.constants :refer [api-key tokens]]))
+            [zebra.helpers.constants :refer [api-key tokens]])
+  (:import [clojure.lang ExceptionInfo]))
 
 (deftest create-source
   (let [source (sources/create {:type  "card"
@@ -29,6 +30,22 @@
       (is (map? (:type-data three-d-secure-source)))
       (is (= (:status three-d-secure-source)
             (:pending sources/status-codes))))))
+
+(deftest error-creating-three-d-secure-source
+  (let [card-source (sources/create
+                      {:type  "card"
+                       :token (:three-d-secure-required tokens)}
+                      api-key)]
+    (testing "should raise a zebra exception"
+      (is (thrown-with-msg?
+            ExceptionInfo
+            #"Failed to create stripe source"
+            (sources/create
+              {:type           "three_d_secure"
+               :three_d_secure {:card (:id card-source)}
+               :amount         100
+               :currency       "gbp"}
+              api-key))))))
 
 (deftest retrieve-source
   (let [source (sources/create {:type  "card"
