@@ -71,7 +71,6 @@
       (is (= (:amount payment-intent) 1234))
       (is (= (:currency payment-intent) "gbp"))
       (is (= (:payment_method payment-intent) (:id payment-method)))
-     #_
-      (let [next-action (:next_action payment-intent)]
-        (is (string? (:redirect_to_url next-action)))))))
+      ;; TODO figure out why this is not "redirect_to_url"
+      (is (= (:type (:next_action payment-intent)) "use_stripe_sdk")))))
 
