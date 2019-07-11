@@ -5,14 +5,23 @@
            [com.stripe.net RequestOptions]))
 
 (defn payment-intent->map [x]
-  {:id                   (.getId x)
-   :object               (.getObject x)
-   :status               (.getStatus x)
-   :confirmation_method  (.getConfirmationMethod x)
-   :payment_method_types (into [] (.getPaymentMethodTypes x))
-   :amount               (.getAmount x)
-   :currency (.getCurrency x)
-   :payment_method (.getPaymentMethod x)})
+  (merge
+    {:id                   (.getId x)
+     :object               (.getObject x)
+     :status               (.getStatus x)
+     :confirmation_method  (.getConfirmationMethod x)
+     :payment_method_types (into [] (.getPaymentMethodTypes x))
+     :amount               (.getAmount x)
+     :currency             (.getCurrency x)
+     :payment_method       (.getPaymentMethod x)}
+    (when-let [next-action (.getNextAction x)]
+      {:next_action
+       (merge
+         {:type (.getType next-action)}
+         ;; TODO handle :use_stripe_sdk
+         (when-let [redirect-to-url (.getRedirectToUrl next-action)]
+           {:redirect_to_url {:return_url (.getReturnUrl redirect-to-url)
+                              :url (.getUrl redirect-to-url)}}))})))
 
 (defn create
   [params api-key]
