@@ -2,7 +2,9 @@
   (:require [zebra.charges :as charges]
             [zebra.customers :as customers]
             [zebra.sources :as sources]
-            [zebra.ephemeral-keys :as ephemeral-keys]))
+            [zebra.ephemeral-keys :as ephemeral-keys]
+            [zebra.payment-methods :as payment-methods]
+            [zebra.payment-intents :as payment-intents]))
 
 ;Charges
 
@@ -41,3 +43,13 @@
 
 (defn create-ephemeral-key [params api-version api-key]
   (ephemeral-keys/create params api-version api-key))
+
+;Payment Methods
+
+(defn create-payment-method [params api-key]
+  (payment-methods/create params api-key))
+
+;Payment Intents
+
+(defn create-payment-intent [params api-key]
+  (payment-intents/create params api-key))

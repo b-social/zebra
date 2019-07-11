@@ -1,4 +1,4 @@
-(defproject b-social/zebra "0.1.5"
+(defproject b-social/zebra "0.1.6-rc1-SNAPSHOT"
   :description "A clojure wrapper for Stripe"
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
