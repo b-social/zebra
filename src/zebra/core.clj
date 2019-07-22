@@ -53,3 +53,6 @@
 
 (defn create-payment-intent [params api-key]
   (payment-intents/create params api-key))
+
+(defn retrieve-payment-intent [id api-key]
+  (payment-intents/retrieve id api-key))

@@ -28,3 +28,10 @@
   (payment-intent->map
     (PaymentIntent/create (transform-params params)
       (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+
+(defn retrieve
+  [id api-key]
+  (payment-intent->map
+    (PaymentIntent/retrieve id
+      (-> (RequestOptions/builder)
+        (.setApiKey api-key) .build))))

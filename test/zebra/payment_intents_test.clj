@@ -74,3 +74,13 @@
       ;; TODO figure out why this is not "redirect_to_url"
       (is (= (:type (:next_action payment-intent)) "use_stripe_sdk")))))
 
+(deftest retrieve-payment-intent
+  (let [payment-intent (payment-intent/create
+                         {:amount               2000
+                          :currency             "usd"
+                          :payment_method_types ["card"]}
+                         api-key)
+        payment-intent2 (payment-intent/retrieve (:id payment-intent) api-key)]
+
+    (testing "should create a valid payment intent"
+      (is (= (:id payment-intent2) (:id payment-intent))))))
