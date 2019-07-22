@@ -49,6 +49,9 @@
 (defn create-payment-method [params api-key]
   (payment-methods/create params api-key))
 
+(defn retrieve-payment-method [id api-key]
+  (payment-methods/retrieve id api-key))
+
 ;Payment Intents
 
 (defn create-payment-intent [params api-key]

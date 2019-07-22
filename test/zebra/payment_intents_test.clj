@@ -82,5 +82,5 @@
                          api-key)
         payment-intent2 (payment-intent/retrieve (:id payment-intent) api-key)]
 
-    (testing "should create a valid payment intent"
+    (testing "should retrieve payment intent"
       (is (= (:id payment-intent2) (:id payment-intent))))))

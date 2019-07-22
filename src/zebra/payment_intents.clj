@@ -33,5 +33,4 @@
   [id api-key]
   (payment-intent->map
     (PaymentIntent/retrieve id
-      (-> (RequestOptions/builder)
-        (.setApiKey api-key) .build))))
+      (-> (RequestOptions/builder) (.setApiKey api-key) .build))))

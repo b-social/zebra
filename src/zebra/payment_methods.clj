@@ -18,3 +18,9 @@
   (payment-method->map
     (PaymentMethod/create (transform-params params)
       (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+
+(defn retrieve
+  [id api-key]
+  (payment-method->map
+    (PaymentMethod/retrieve id nil
+      (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
