@@ -15,7 +15,7 @@
          (is (= (:object payment-method) "payment_method"))
          (is (some? (:id payment-method)))
          (is (= (keys (:card payment-method))
-               [:brand :exp_month :exp_year])))))
+               [:brand :exp_month :exp_year :funding :last4 :three_d_secure_usage])))))
 
 (deftest retrieve-payment-method
   (let [payment-method (create
@@ -28,3 +28,13 @@
 
     (testing "should retrieve payment-method"
       (is (= (:id payment-method2) (:id payment-method))))))
+
+(deftest retrieve-payment-method-includes-card-details
+  (let [payment-method (retrieve "pm_card_threeDSecure2Required" api-key)
+        card (:card payment-method)]
+
+    (testing "should retrieve payment-method"
+      (is (= true (-> card :three_d_secure_usage :supported)))
+      (is (= "visa" (-> card :brand)))
+      (is (= "credit" (-> card :funding)))
+      (is (= "3220" (-> card :last4))))))

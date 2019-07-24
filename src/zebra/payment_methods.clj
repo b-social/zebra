@@ -9,9 +9,13 @@
     {:id     (.getId x)
      :object (.getObject x)}
     (when-let [card (.getCard x)]
-      {:card {:brand (.getBrand card)
+      {:card {:brand     (.getBrand card)
               :exp_month (.getExpMonth card)
-              :exp_year (.getExpYear card)}})))
+              :exp_year  (.getExpYear card)
+              :funding (.getFunding card)
+              :last4 (.getLast4 card)
+              :three_d_secure_usage
+                         {:supported (-> card .getThreeDSecureUsage .getSupported)}}})))
 
 (defn create
   [params api-key]
