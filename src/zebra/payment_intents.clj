@@ -34,3 +34,10 @@
   (payment-intent->map
     (PaymentIntent/retrieve id
       (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+
+(defn capture
+  [id api-key]
+  (let [opts (-> (RequestOptions/builder) (.setApiKey api-key) .build)
+        payment-intent
+        (PaymentIntent/retrieve id opts)]
+    (payment-intent->map (.capture payment-intent nil opts))))

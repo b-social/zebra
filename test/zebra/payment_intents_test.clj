@@ -53,13 +53,13 @@
                                  :exp_year  "2020"
                                  :cvc       "314"}} api-key)
         payment-intent (payment-intent/create
-                                   {:amount               1234
-                                    :currency             "gbp"
-                                    :payment_method_types ["card"]
-                                    :confirm              true
-                                    :confirmation_method  "manual"
-                                    :payment_method       (:id payment-method)}
-                                   api-key)]
+                         {:amount               1234
+                          :currency             "gbp"
+                          :payment_method_types ["card"]
+                          :confirm              true
+                          :confirmation_method  "manual"
+                          :payment_method       (:id payment-method)}
+                         api-key)]
 
     (testing "should create a valid payment intent"
       (is (str/starts-with? (:id payment-intent) "pi_"))
@@ -84,3 +84,23 @@
 
     (testing "should retrieve payment intent"
       (is (= (:id payment-intent2) (:id payment-intent))))))
+
+(deftest capture-payment-intent
+  (let [payment-intent (payment-intent/create
+                         {:amount               1234
+                          :currency             "gbp"
+                          :payment_method_types ["card"]
+                          :confirm              true
+                          :capture_method       "manual"
+                          :payment_method       "pm_card_visa"}
+                         api-key)
+        payment-intent2 (payment-intent/capture (:id payment-intent) api-key)]
+
+    (testing "should be the same payment intent"
+      (is (= (:id payment-intent2) (:id payment-intent))))
+
+    (testing "should have required capture"
+      (is (= "requires_capture" (:status payment-intent))))
+
+    (testing "should have captured"
+      (is (= "succeeded" (:status payment-intent2))))))
