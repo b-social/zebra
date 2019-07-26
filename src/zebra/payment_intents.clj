@@ -9,6 +9,9 @@
     {:id                   (.getId x)
      :object               (.getObject x)
      :status               (.getStatus x)
+     ;; XXX Does not exist in our version
+     ;; :description          (.getDescription x)
+     :statement_descriptor (.getStatementDescriptor x)
      :confirmation_method  (.getConfirmationMethod x)
      :payment_method_types (into [] (.getPaymentMethodTypes x))
      :amount               (.getAmount x)
@@ -34,6 +37,13 @@
   (payment-intent->map
     (PaymentIntent/retrieve id
       (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+
+(defn update
+  [id params api-key]
+  (let [opts (-> (RequestOptions/builder) (.setApiKey api-key) .build)
+        payment-intent (PaymentIntent/retrieve id opts)]
+    (payment-intent->map
+      (.update payment-intent (transform-params params) opts))))
 
 (defn capture
   [id api-key]

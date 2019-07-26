@@ -60,5 +60,8 @@
 (defn retrieve-payment-intent [id api-key]
   (payment-intents/retrieve id api-key))
 
+(defn update-payment-intent [id params api-key]
+  (payment-intents/update id params api-key))
+
 (defn capture-payment-intent [id api-key]
   (payment-intents/capture id api-key))

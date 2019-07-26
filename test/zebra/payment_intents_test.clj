@@ -85,6 +85,30 @@
     (testing "should retrieve payment intent"
       (is (= (:id payment-intent2) (:id payment-intent))))))
 
+(deftest update-payment-intent
+  (let [payment-intent (payment-intent/create
+                         {:amount               1234
+                          :currency             "gbp"
+                          :payment_method_types ["card"]
+                          :confirm              true
+                          :capture_method       "manual"
+                          :payment_method       "pm_card_visa"}
+                         api-key)
+        description "B-Social: Top Up"
+        payment-intent2 (payment-intent/update (:id payment-intent)
+                          ;; TODO: description is only supported in >= 8.0.0
+                          {:statement_descriptor description}
+                          api-key)]
+
+    (testing "should be the same payment intent"
+      (is (= (:id payment-intent2) (:id payment-intent))))
+
+    (testing "should have had no description"
+      (is (= nil (:statement_descriptor payment-intent))))
+
+    (testing "should have updated description"
+      (is (= description (:statement_descriptor payment-intent2))))))
+
 (deftest capture-payment-intent
   (let [payment-intent (payment-intent/create
                          {:amount               1234
