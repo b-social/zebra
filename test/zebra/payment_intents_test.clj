@@ -64,7 +64,7 @@
     (testing "should create a valid payment intent"
       (is (str/starts-with? (:id payment-intent) "pi_"))
       (is (= (:object payment-intent) "payment_intent"))
-      (is (= (:status payment-intent) "requires_source_action"))
+      (is (= (:status payment-intent) "requires_action"))
       (is (= (:confirmation_method payment-intent) "manual"))
       (is (= (:payment_method_types payment-intent) ["card"]))
       (is (vector? (:payment_method_types payment-intent)))
@@ -94,7 +94,7 @@
                           :capture_method       "manual"
                           :payment_method       "pm_card_visa"}
                          api-key)
-        description "B-Social: Top Up"
+        description "Double Espresso"
         payment-intent2 (payment-intent/update (:id payment-intent)
                           ;; TODO: description is only supported in >= 8.0.0
                           {:statement_descriptor description}

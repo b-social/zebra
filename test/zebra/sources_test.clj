@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [zebra.sources :as sources]
             [zebra.helpers.constants :refer [api-key tokens]])
-  (:import [clojure.lang ExceptionInfo]))
+  (:import [com.stripe.exception InvalidRequestException]))
 
 (deftest create-source
   (let [source (sources/create {:type  "card"
@@ -27,7 +27,6 @@
           api-key)]
     (testing "should be a valid source"
       (is (some? (:id three-d-secure-source)))
-      (is (map? (:type-data three-d-secure-source)))
       (is (= (:status three-d-secure-source)
             (:pending sources/status-codes))))))
 
@@ -38,8 +37,8 @@
                       api-key)]
     (testing "should raise a zebra exception"
       (is (thrown-with-msg?
-            ExceptionInfo
-            #"Failed to create stripe source"
+            InvalidRequestException
+            #"Missing required param: redirect.; code: parameter_missing"
             (sources/create
               {:type           "three_d_secure"
                :three_d_secure {:card (:id card-source)}
