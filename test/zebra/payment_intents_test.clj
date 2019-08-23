@@ -14,7 +14,9 @@
 
     (testing "should create a valid payment intent"
       (is (str/starts-with? (:id payment-intent) "pi_"))
-      (is (= (:object payment-intent) "payment_intent")))))
+      (is (= (:object payment-intent) "payment_intent"))
+      (is (str/starts-with? (:client_secret payment-intent)
+            (str (:id payment-intent) "_secret_"))))))
 
 (deftest create-and-confirm-payment-intent
   (let [payment-method (payment-methods/create

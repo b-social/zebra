@@ -24,7 +24,8 @@
      :payment_method_types (into [] (.getPaymentMethodTypes x))
      :amount               (.getAmount x)
      :currency             (.getCurrency x)
-     :payment_method       (.getPaymentMethod x)}
+     :payment_method       (.getPaymentMethod x)
+     :client_secret        (.getClientSecret x)}
     (when-let [next-action (.getNextAction x)]
       {:next_action
        (next-action->map next-action)})))
