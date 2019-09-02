@@ -2,7 +2,9 @@
   (:refer-clojure :exclude [update])
   (:require [zebra.utils :refer [transform-params
                                  transform-type-data]])
-  (:import [com.stripe.model PaymentIntent PaymentIntent$NextAction]
+  (:import [com.stripe.model PaymentIntent
+                             PaymentIntent$NextAction
+                             PaymentIntent$PaymentMethodOptions]
            [com.stripe.net RequestOptions]
            [java.util Map]))
 
@@ -13,19 +15,47 @@
       {:redirect_to_url {:return_url (.getReturnUrl redirect-to-url)
                          :url        (.getUrl redirect-to-url)}})))
 
+(defn payment-method-options->map [^PaymentIntent$PaymentMethodOptions options]
+  (merge {}
+    (when-let [card (.getCard options)]
+      {:request_three_d_secure (.getRequestThreeDSecure card)})))
+
 (defn payment-intent->map [x]
   (merge
-    {:id                   (.getId x)
-     :object               (.getObject x)
-     :status               (.getStatus x)
-     :description          (.getDescription x)
-     :statement_descriptor (.getStatementDescriptor x)
-     :confirmation_method  (.getConfirmationMethod x)
-     :payment_method_types (into [] (.getPaymentMethodTypes x))
-     :amount               (.getAmount x)
-     :currency             (.getCurrency x)
-     :payment_method       (.getPaymentMethod x)
-     :client_secret        (.getClientSecret x)}
+    {:id                     (.getId x)
+     :object                 (.getObject x)
+     :amount                 (.getAmount x)
+     :amount_capturable      (.getAmountCapturable x)
+     :amount_received        (.getAmountReceived x)
+     :application            (.getApplication x)
+     :application_fee_amount (.getApplicationFeeAmount x)
+     :canceled_at            (.getCanceledAt x)
+     :cancellation_reason    (.getCancellationReason x)
+     :capture_method         (.getCaptureMethod x)
+     ;:charges
+     :client_secret          (.getClientSecret x)
+     :confirmation_method    (.getConfirmationMethod x)
+     :created                (.getCreated x)
+     :currency               (.getCurrency x)
+     :description            (.getDescription x)
+     :invoice                (.getInvoice x)
+     :livemode               (.getLivemode x)
+     :metadata               (.getMetadata x)
+     :on_behalf_of           (.getOnBehalfOf x)
+     :payment_method         (.getPaymentMethod x)
+     :payment_method_options (payment-method-options->map
+                               (.getPaymentMethodOptions x))
+     :payment_method_types   (into [] (.getPaymentMethodTypes x))
+     :receipt_email          (.getReceiptEmail x)
+     :review                 (.getReview x)
+     :setup_future_usage     (.getSetupFutureUsage x)
+     :shipping               (when-let [shipping (.getShipping x)]
+                               shipping)
+     :statement_descriptor   (.getStatementDescriptor x)
+     :status                 (.getStatus x)
+     :transfer_data          (when-let [transfer-data (.getTransferData x)]
+                               transfer-data)
+     :transfer_group         (.getTransferGroup x)}
     (when-let [next-action (.getNextAction x)]
       {:next_action
        (next-action->map next-action)})))

@@ -130,3 +130,25 @@
 
     (testing "should have captured"
       (is (= "succeeded" (:status payment-intent2))))))
+
+(deftest payment-intent-fields
+  (let [payment-intent (payment-intent/create
+                         {:amount               1234
+                          :description          "Coffee"
+                          :currency             "gbp"
+                          :payment_method_types ["card"]
+                          :confirm              true
+                          :capture_method       "manual"
+                          :payment_method       "pm_card_visa"}
+                         api-key)]
+
+    (testing "should decode fields correctly"
+      (is (= "requires_capture" (:status payment-intent)))
+      (is (= "Coffee" (:description payment-intent)))
+      (is (= 1234 (:amount_capturable payment-intent)))
+      (is (= ["card"] (:payment_method_types payment-intent)))
+      (is (= 0 (:amount_received payment-intent)))
+      (is (= "gbp" (:currency payment-intent)))
+      (is (= "automatic" (:confirmation_method payment-intent)))
+      (is (= "automatic" (get-in payment-intent [:payment_method_options
+                                                 :request_three_d_secure]))))))
