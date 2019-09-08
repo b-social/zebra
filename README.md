@@ -9,3 +9,9 @@ Inspired by clojurewerkz/elephant: https://github.com/clojurewerkz/elephant
 
 ## Run linting
 `lein eastwood`
+
+## License
+
+Copyright © 2019 B-Social Ltd.
+
+Distributed under the MIT license.
