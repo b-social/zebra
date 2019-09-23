@@ -10,6 +10,14 @@
     (testing "should be a valid customer"
       (is (some? (:id customer))))))
 
+(deftest create-customer-with-metadata
+  (let [key "some-field"
+        value "some value"
+        customer (customers/create api-key {key value})]
+    (testing "should be a valid customer"
+      (is (some? (:id customer)))
+      (is (= value (get-in customer [:metadata key]))))))
+
 (deftest retrieve-customer
   (let [customer (customers/create api-key)
         retrieved-customer (customers/retrieve (:id customer) api-key)]

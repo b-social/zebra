@@ -5,14 +5,20 @@
            [com.stripe.net RequestOptions]))
 
 (defn customer->map [customer]
-  {:id      (.getId customer)
-   :sources (.getSources customer)})
+  {:id       (.getId customer)
+   :metadata (.getMetadata customer)
+   :sources  (.getSources customer)})
 
 (defn create
-  [api-key]
-  (customer->map
-    (Customer/create {}
-      (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+  ([api-key metadata]
+   (customer->map
+     (Customer/create {"metadata" metadata}
+       (->
+         (RequestOptions/builder)
+         (.setApiKey api-key)
+         .build))))
+  ([api-key]
+   (create api-key {})))
 
 (defn retrieve
   [id api-key]
