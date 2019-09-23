@@ -1,4 +1,4 @@
-(defproject b-social/zebra "0.1.8-SNAPSHOT"
+(defproject b-social/zebra "0.1.8"
   :description "A clojure wrapper for Stripe"
   :url "https://github.com/b-social/zebra"
   :license {:name "The MIT License"
