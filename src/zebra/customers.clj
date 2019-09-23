@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [list update])
   (:require [zebra.sources :refer [source->map]])
   (:import [com.stripe.model Customer]
-           [com.stripe.net RequestOptions]))
+           [com.stripe.net RequestOptions]
+           [java.util Map]))
 
 (defn customer->map [customer]
   {:id       (.getId customer)
@@ -10,9 +11,9 @@
    :sources  (.getSources customer)})
 
 (defn create
-  ([api-key metadata]
+  ([api-key ^Map params]
    (customer->map
-     (Customer/create {"metadata" metadata}
+     (Customer/create params
        (->
          (RequestOptions/builder)
          (.setApiKey api-key)

@@ -18,8 +18,11 @@
 
 ;Customers
 
-(defn create-customer [api-key]
-  (customers/create api-key))
+(defn create-customer
+  ([params api-key]
+   (customers/create params api-key))
+  ([api-key]
+   (create-customer {} api-key)))
 
 (defn retrieve-customer [id api-key]
   (customers/retrieve id api-key))
