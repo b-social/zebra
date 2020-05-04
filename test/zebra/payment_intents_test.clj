@@ -59,22 +59,23 @@
                           :currency             "gbp"
                           :payment_method_types ["card"]
                           :confirm              true
-                          :confirmation_method  "manual"
-                          :payment_method       (:id payment-method)}
+                          :confirmation_method  "automatic"
+                          :payment_method       (:id payment-method)
+                          :return_url           "http://www.google.com"
+                          }
                          api-key)]
 
     (testing "should create a valid payment intent"
       (is (str/starts-with? (:id payment-intent) "pi_"))
       (is (= (:object payment-intent) "payment_intent"))
       (is (= (:status payment-intent) "requires_action"))
-      (is (= (:confirmation_method payment-intent) "manual"))
+      (is (= (:confirmation_method payment-intent) "automatic"))
       (is (= (:payment_method_types payment-intent) ["card"]))
       (is (vector? (:payment_method_types payment-intent)))
       (is (= (:amount payment-intent) 1234))
       (is (= (:currency payment-intent) "gbp"))
       (is (= (:payment_method payment-intent) (:id payment-method)))
-      ;; TODO figure out why this is not "redirect_to_url"
-      (is (= (:type (:next_action payment-intent)) "use_stripe_sdk")))))
+      (is (= (:type (:next_action payment-intent)) "redirect_to_url")))))
 
 (deftest retrieve-payment-intent
   (let [payment-intent (payment-intent/create
