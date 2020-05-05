@@ -9,7 +9,7 @@ Inspired by clojurewerkz/elephant: https://github.com/clojurewerkz/elephant
 Add the following to your `project.clj` file:
 
 ```clj
-[b-social/zebra "0.1.10"]
+[b-social/zebra "0.1.11"]
 ```
 
 ## Documentation
