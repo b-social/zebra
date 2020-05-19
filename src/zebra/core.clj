@@ -30,6 +30,9 @@
 (defn attach-source-to-customer [customer-id source-id api-key]
   (customers/attach-source customer-id source-id api-key))
 
+(defn attach-payment-method-to-customer [customer-id payment-method-id api-key]
+  (customers/attach-payment-method customer-id payment-method-id api-key))
+
 ;Sources
 
 (defn create-source [params api-key]
