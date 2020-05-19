@@ -61,8 +61,8 @@
                           :confirm              true
                           :confirmation_method  "automatic"
                           :payment_method       (:id payment-method)
-                          :return_url           "http://www.google.com"
-                          }
+                          :return_url           "http://www.google.com"}
+
                          api-key)]
 
     (testing "should create a valid payment intent"
@@ -131,3 +131,26 @@
 
     (testing "should have captured"
       (is (= "succeeded" (:status payment-intent2))))))
+
+(deftest confirm-payment-intent
+  (let [payment-method (payment-methods/create
+                         {:type "card"
+                          :card {:number    "4242424242424242"
+                                 :exp_month "7"
+                                 :exp_year  "2020"
+                                 :cvc       "314"}} api-key)
+        payment-intent (payment-intent/create
+                         {:amount               1234
+                          :currency             "gbp"
+                          :payment_method_types ["card"]
+                          :confirmation_method  "automatic"
+                          :payment_method       (:id payment-method)}
+                         api-key)
+        confirmed-intent (payment-intent/confirm (:id payment-intent) api-key)]
+    (is (= (:status payment-intent "requires_confirmation"))
+        "Intent has not yet been confirmed")
+    (is (= (:id confirmed-intent)
+           (:id payment-intent))
+        "Confirmed intent and pending intent have same id")
+    (is (= (:status confirmed-intent) "succeeded")
+        "Confirming the intent has caused it to succeed")))

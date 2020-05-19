@@ -55,3 +55,10 @@
         payment-intent
         (PaymentIntent/retrieve id opts)]
     (payment-intent->map (.capture payment-intent opts))))
+
+(defn confirm
+  [id api-key]
+  (let [opts (-> (RequestOptions/builder) (.setApiKey api-key) .build)
+        payment-intent (PaymentIntent/retrieve id opts)]
+    (payment-intent->map
+      (.confirm payment-intent {} opts))))
