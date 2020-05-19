@@ -33,7 +33,7 @@
    :three_d_secure      (.getThreeDSecure card)
    :tokenization_method (.getTokenizationMethod card)})
 
-(defn source->map [source]
+(defn source->map [^Source source]
   (merge
     {:id       (.getId source)
      :customer (.getCustomer source)

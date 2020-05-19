@@ -13,7 +13,7 @@
       {:redirect_to_url {:return_url (.getReturnUrl redirect-to-url)
                          :url        (.getUrl redirect-to-url)}})))
 
-(defn payment-intent->map [x]
+(defn payment-intent->map [^PaymentIntent x]
   (merge
     {:id                   (.getId x)
      :object               (.getObject x)

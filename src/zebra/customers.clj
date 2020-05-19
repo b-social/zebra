@@ -5,7 +5,7 @@
            [com.stripe.net RequestOptions]
            [java.util Map]))
 
-(defn customer->map [customer]
+(defn customer->map [^Customer customer]
   {:id       (.getId customer)
    :metadata (.getMetadata customer)
    :sources  (.getSources customer)})

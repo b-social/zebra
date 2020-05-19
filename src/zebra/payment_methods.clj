@@ -5,7 +5,7 @@
            [com.stripe.net RequestOptions]
            [java.util Map]))
 
-(defn payment-method->map [x]
+(defn payment-method->map [^PaymentMethod x]
   (merge
     {:id     (.getId x)
      :object (.getObject x)}

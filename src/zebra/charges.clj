@@ -9,7 +9,7 @@
                    :pending   "pending"
                    :failed    "failed"})
 
-(defn charge->map [charge]
+(defn charge->map [^Charge charge]
   {:id     (.getId charge)
    :status (.getStatus charge)})
 
