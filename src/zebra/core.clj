@@ -71,3 +71,6 @@
 
 (defn capture-payment-intent [id api-key]
   (payment-intents/capture id api-key))
+
+(defn confirm-payment-intent [id api-key]
+  (payment-intents/confirm id api-key))
