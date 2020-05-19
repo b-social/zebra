@@ -2,7 +2,9 @@
   (:require [clojure.test :refer :all]
             [zebra.customers :as customers]
             [zebra.sources :as sources]
-            [zebra.helpers.constants :refer [api-key tokens]]))
+            [zebra.payment-methods :as payment-methods]
+            [zebra.helpers.constants :refer [api-key tokens]])
+  (:import (com.stripe.model PaymentMethod)))
 
 
 (deftest create-customer
@@ -34,3 +36,20 @@
                           api-key)]
     (testing "should attach a source to a customer"
       (is (= (:id customer) (:customer attached-source))))))
+
+(deftest attach-payment-method
+  (let [customer (customers/create api-key)
+        payment-method (payment-methods/create {:type "card"
+                                                :card {:number    "4242424242424242"
+                                                       :exp_month "7"
+                                                       :exp_year  "2020"
+                                                       :cvc       "314"}} api-key)
+        attached-payment-method (customers/attach-payment-method
+                                  (:id customer)
+                                  (:id payment-method)
+                                  api-key)
+        ^PaymentMethod pm (-> attached-payment-method
+                              meta
+                              :original)]
+    (testing "should attach a payment method to a customer"
+      (is (= (:id customer) (.getCustomer pm))))))
