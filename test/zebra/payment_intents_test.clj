@@ -147,7 +147,7 @@
                           :payment_method       (:id payment-method)}
                          api-key)
         confirmed-intent (payment-intent/confirm (:id payment-intent) api-key)]
-    (is (= (:status payment-intent "requires_confirmation"))
+    (is (= (:status payment-intent) "requires_confirmation")
         "Intent has not yet been confirmed")
     (is (= (:id confirmed-intent)
            (:id payment-intent))
