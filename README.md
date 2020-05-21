@@ -30,6 +30,6 @@ TODO: Add usage.
 
 ## License
 
-Copyright © 2019 B-Social Ltd.
+Copyright © 2020 B-Social Ltd.
 
 Distributed under the MIT license.
