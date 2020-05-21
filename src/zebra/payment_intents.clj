@@ -13,7 +13,7 @@
       {:redirect_to_url {:return_url (.getReturnUrl redirect-to-url)
                          :url        (.getUrl redirect-to-url)}})))
 
-(defn payment-intent->map [x]
+(defn payment-intent->map [^PaymentIntent x]
   (merge
     {:id                   (.getId x)
      :object               (.getObject x)
@@ -55,3 +55,10 @@
         payment-intent
         (PaymentIntent/retrieve id opts)]
     (payment-intent->map (.capture payment-intent opts))))
+
+(defn confirm
+  [id api-key]
+  (let [opts (-> (RequestOptions/builder) (.setApiKey api-key) .build)
+        payment-intent (PaymentIntent/retrieve id opts)]
+    (payment-intent->map
+      (.confirm payment-intent {} opts))))

@@ -4,7 +4,7 @@
   :license {:name "The MIT License"
             :url  "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.9.0"]
-                 [com.stripe/stripe-java "10.12.1"]]
+                 [com.stripe/stripe-java "19.12.0"]]
   :plugins [[jonase/eastwood "0.2.5"]
             [lein-eftest "0.5.3"]
             [lein-changelog "0.3.2"]
