@@ -9,6 +9,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.1.12] — 2020-05-21
+
 ## [0.1.11] — 2020-05-05
 
 ## [0.1.10] — 2020-05-05
@@ -28,4 +30,5 @@ Released without _CHANGELOG.md_.
 [0.1.9]: https://github.com/b-social/zebra/compare/0.1.8...0.1.9
 [0.1.10]: https://github.com/b-social/zebra/compare/0.1.9...0.1.10
 [0.1.11]: https://github.com/b-social/zebra/compare/0.1.10...0.1.11
-[Unreleased]: https://github.com/b-social/zebra/compare/0.1.11...HEAD
+[0.1.12]: https://github.com/b-social/zebra/compare/0.1.11...0.1.12
+[Unreleased]: https://github.com/b-social/zebra/compare/0.1.12...HEAD
