@@ -3,7 +3,11 @@
             [clojure.string :as str]
             [zebra.payment-methods :as payment-methods]
             [zebra.payment-intents :as payment-intent]
-            [zebra.helpers.constants :refer [api-key tokens]]))
+            [webdriver.core :refer :all]
+            [zebra.helpers.constants :refer [api-key tokens]])
+  (:import (org.openqa.selenium.htmlunit HtmlUnitDriver)
+           (com.gargoylesoftware.htmlunit BrowserVersion)))
+
 
 (deftest create-payment-intent
   (let [payment-intent (payment-intent/create
@@ -65,17 +69,30 @@
 
                          api-key)]
 
-    (testing "should create a valid payment intent"
-      (is (str/starts-with? (:id payment-intent) "pi_"))
-      (is (= (:object payment-intent) "payment_intent"))
-      (is (= (:status payment-intent) "requires_action"))
-      (is (= (:confirmation_method payment-intent) "automatic"))
-      (is (= (:payment_method_types payment-intent) ["card"]))
-      (is (vector? (:payment_method_types payment-intent)))
-      (is (= (:amount payment-intent) 1234))
-      (is (= (:currency payment-intent) "gbp"))
-      (is (= (:payment_method payment-intent) (:id payment-method)))
-      (is (= (:type (:next_action payment-intent)) "redirect_to_url")))))
+        (do
+          ;(def driver {:driver (new HtmlUnitDriver BrowserVersion/BEST_SUPPORTED true)})
+          (def driver (create-driver {:driver-type :firefox :driver-args ["--headless"]}))
+          (to driver (:url (:redirect_to_url (:next_action payment-intent))))
+          (wait-for-element driver :name "__privateStripeFrame4")
+          (iframe driver "__privateStripeFrame4")
+          (wait-for-element driver :name "stripe-challenge-frame")
+          (iframe driver "stripe-challenge-frame")
+          (send-keys (wait-for-element driver :xpath "//*[@id=\"test-source-authorize-3ds\"]") (. org.openqa.selenium.Keys ENTER)))
+          (Thread/sleep 500)
+
+       (let [payment-intent-after-auth (payment-intent/retrieve (:id payment-intent) api-key)]
+         (testing "should create a valid payment intent"
+           (is (str/starts-with? (:id payment-intent-after-auth) "pi_"))
+           (is (= (:object payment-intent-after-auth) "payment_intent"))
+           (is (not (= (:status payment-intent-after-auth) "requires_action")))
+           (is (= (:confirmation_method payment-intent-after-auth) "automatic"))
+           (is (= (:payment_method_types payment-intent-after-auth) ["card"]))
+           (is (vector? (:payment_method_types payment-intent-after-auth)))
+           (is (= (:amount payment-intent-after-auth) 1234))
+           (is (= (:currency payment-intent-after-auth) "gbp"))
+           (is (= (:payment_method payment-intent-after-auth) (:id payment-method)))
+           (is (= (:type (:next_action payment-intent-after-auth)) nil))))
+    ))
 
 (deftest retrieve-payment-intent
   (let [payment-intent (payment-intent/create
