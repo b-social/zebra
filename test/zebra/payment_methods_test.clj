@@ -8,7 +8,7 @@
                          {:type "card"
                           :card {:number    "4242424242424242"
                                  :exp_month "7"
-                                 :exp_year  "2020"
+                                 :exp_year  "2026"
                                  :cvc       "314"}} api-key)]
 
     (testing "should create a valid payment method"
@@ -22,7 +22,7 @@
                          {:type "card"
                           :card {:number    "4242424242424242"
                                  :exp_month "7"
-                                 :exp_year  "2020"
+                                 :exp_year  "2026"
                                  :cvc       "314"}} api-key)
         payment-method2 (retrieve (:id payment-method) api-key)]
 

@@ -1,10 +1,11 @@
 (ns zebra.payment-intents
   (:refer-clojure :exclude [update])
-  (:require [zebra.utils :refer [transform-params
-                                 transform-type-data]])
+  (:require [zebra.utils :refer [transform-params]]
+            [clojure.walk :refer [keywordize-keys]])
   (:import [com.stripe.model PaymentIntent PaymentIntent$NextAction]
            [com.stripe.net RequestOptions]
            [java.util Map]))
+
 
 (defn next-action->map [^PaymentIntent$NextAction next-action]
   (merge
@@ -20,12 +21,15 @@
      :status               (.getStatus x)
      :description          (.getDescription x)
      :statement_descriptor (.getStatementDescriptor x)
-     :confirmation_method  (.getConfirmationMethod x)
+     :confirmation_method   (.getConfirmationMethod x)
      :payment_method_types (into [] (.getPaymentMethodTypes x))
      :amount               (.getAmount x)
      :currency             (.getCurrency x)
      :payment_method       (.getPaymentMethod x)
-     :client_secret        (.getClientSecret x)}
+     :client_secret        (.getClientSecret x)
+     :capture_method       (.getCaptureMethod x)
+     :metadata             (clojure.walk/keywordize-keys
+                             (into {} (.getMetadata x)))}
     (when-let [next-action (.getNextAction x)]
       {:next_action
        (next-action->map next-action)})))

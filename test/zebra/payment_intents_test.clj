@@ -23,7 +23,7 @@
                          {:type "card"
                           :card {:number    "4242424242424242"
                                  :exp_month "7"
-                                 :exp_year  "2020"
+                                 :exp_year  "2026"
                                  :cvc       "314"}} api-key)
         confirmed-payment-intent (payment-intent/create
                                    {:amount               2000
@@ -52,7 +52,7 @@
                           :card {;; A 3D Secure 2 card
                                  :number    "4000000000003220"
                                  :exp_month "7"
-                                 :exp_year  "2020"
+                                 :exp_year  "2026"
                                  :cvc       "314"}} api-key)
         payment-intent (payment-intent/create
                          {:amount               1234
@@ -76,6 +76,38 @@
       (is (= (:currency payment-intent) "gbp"))
       (is (= (:payment_method payment-intent) (:id payment-method)))
       (is (= (:type (:next_action payment-intent)) "redirect_to_url")))))
+
+(deftest create-and-confirm-manual-capture-payment-intent
+  (let [payment-method (payment-methods/create
+                         {:type "card"
+                          :card {:number    "4242424242424242"
+                                 :exp_month "7"
+                                 :exp_year  "2026"
+                                 :cvc       "314"}} api-key)
+        confirmed-payment-intent (payment-intent/create
+                                   {:amount               2000
+                                    :currency             "usd"
+                                    :payment_method_types ["card"]
+                                    :confirm              true
+                                    :confirmation_method  "manual"
+                                    :payment_method       (:id payment-method)
+                                    :capture_method      "manual"
+                                    :metadata            {:example "value"}}
+                                   api-key)]
+
+    (testing "should create a valid payment intent"
+      (is (str/starts-with? (:id confirmed-payment-intent) "pi_"))
+      (is (= (:object confirmed-payment-intent) "payment_intent"))
+      (is (= (:status confirmed-payment-intent) "requires_capture"))
+      (is (= (:metadata confirmed-payment-intent) {:example "value"}))
+      (is (= (:confirmation_method confirmed-payment-intent) "manual"))
+      (is (= (:capture_method confirmed-payment-intent) "manual"))
+      (is (= (:payment_method_types confirmed-payment-intent) ["card"]))
+      (is (vector? (:payment_method_types confirmed-payment-intent)))
+      (is (= (:amount confirmed-payment-intent) 2000))
+      (is (= (:currency confirmed-payment-intent) "usd"))
+      (is (= (:payment_method confirmed-payment-intent)
+            (:id payment-method))))))
 
 (deftest retrieve-payment-intent
   (let [payment-intent (payment-intent/create
@@ -137,7 +169,7 @@
                          {:type "card"
                           :card {:number    "4242424242424242"
                                  :exp_month "7"
-                                 :exp_year  "2020"
+                                 :exp_year  "2026"
                                  :cvc       "314"}} api-key)
         payment-intent (payment-intent/create
                          {:amount               1234

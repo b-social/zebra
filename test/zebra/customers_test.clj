@@ -42,7 +42,7 @@
         payment-method (payment-methods/create {:type "card"
                                                 :card {:number    "4242424242424242"
                                                        :exp_month "7"
-                                                       :exp_year  "2020"
+                                                       :exp_year  "2026"
                                                        :cvc       "314"}} api-key)
         attached-payment-method (customers/attach-payment-method
                                   (:id customer)
