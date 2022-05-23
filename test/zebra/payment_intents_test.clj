@@ -3,16 +3,19 @@
             [clojure.string :as str]
             [zebra.payment-methods :as payment-methods]
             [zebra.payment-intents :as payment-intent]
+            [zebra.customers :as customers]
             [zebra.helpers.constants :refer [api-key tokens]]))
 
 (deftest create-payment-intent
-  (let [payment-intent (payment-intent/create
+  (let [customer (customers/create api-key)
+        payment-intent (payment-intent/create
                          {:amount               2000
                           :currency             "usd"
-                          :payment_method_types ["card"]}
+                          :payment_method_types ["card"]
+                          :customer (:id customer)}
                          api-key)]
-
     (testing "should create a valid payment intent"
+      (is (= (:id customer) (:customer payment-intent)))
       (is (str/starts-with? (:id payment-intent) "pi_"))
       (is (= (:object payment-intent) "payment_intent"))
       (is (str/starts-with? (:client_secret payment-intent)

@@ -17,6 +17,7 @@
 (defn payment-intent->map [^PaymentIntent x]
   (merge
     {:id                   (.getId x)
+     :customer             (.getCustomer x)
      :object               (.getObject x)
      :status               (.getStatus x)
      :description          (.getDescription x)
