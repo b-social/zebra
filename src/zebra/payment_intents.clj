@@ -25,6 +25,8 @@
      :confirmation_method   (.getConfirmationMethod x)
      :payment_method_types (into [] (.getPaymentMethodTypes x))
      :amount               (.getAmount x)
+     :amount_capturable    (.getAmountCapturable x)
+     :amount_received      (.getAmountReceived x)
      :currency             (.getCurrency x)
      :payment_method       (.getPaymentMethod x)
      :client_secret        (.getClientSecret x)
