@@ -4,7 +4,13 @@
             [zebra.sources :as sources]
             [zebra.ephemeral-keys :as ephemeral-keys]
             [zebra.payment-methods :as payment-methods]
-            [zebra.payment-intents :as payment-intents]))
+            [zebra.payment-intents :as payment-intents])
+  (:import [com.stripe Stripe]))
+
+;Stripe
+
+(defn get-api-base []
+  (Stripe/getApiBase))
 
 ;Charges
 
