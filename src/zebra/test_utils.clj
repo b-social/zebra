@@ -11,6 +11,5 @@
      (try
        (override-api-base ~api-base)
        ~@body
-       (catch Exception _#)
        (finally
          (override-api-base original-api-base#)))))

@@ -20,7 +20,9 @@
         overridden-api-base "https://example.com"]
     (testing "should have original api-base"
       (is (= (core/get-api-base) original-api-base)))
-    (test-utils/with-api-base overridden-api-base
-      (throw (ex-info "Oh no!" {})))
+    (try
+      (test-utils/with-api-base overridden-api-base
+        (throw (ex-info "Oh no!" {})))
+      (catch Exception _))
     (testing "should again have original api-base"
       (is (= (core/get-api-base) original-api-base)))))
