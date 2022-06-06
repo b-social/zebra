@@ -12,7 +12,7 @@
    :sources  (.getSources customer)})
 
 (defn create
-  ([api-key ^Map params]
+  ([^Map params api-key]
    (customer->map
      (Customer/create params
        (->
@@ -20,7 +20,7 @@
          (.setApiKey api-key)
          .build))))
   ([api-key]
-   (create api-key {})))
+   (create {} api-key)))
 
 (defn retrieve
   [id api-key]

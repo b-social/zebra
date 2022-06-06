@@ -15,7 +15,7 @@
 (deftest create-customer-with-metadata
   (let [key "some-field"
         value "some value"
-        customer (customers/create api-key {"metadata" {key value}})]
+        customer (customers/create {"metadata" {key value}} api-key)]
     (testing "should be a valid customer"
       (is (some? (:id customer)))
       (is (= value (get-in customer [:metadata key]))))))
