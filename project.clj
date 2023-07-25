@@ -32,4 +32,6 @@
   {"releases" {:url "https://repo.clojars.org"
                :username :env/clojars_deploy_username
                :password :env/clojars_deploy_token
-               :sign-releases false}})
+               :sign-releases false}}
+
+  :bikeshed {:max-line-length 120})

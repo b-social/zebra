@@ -1,11 +1,13 @@
 (ns zebra.customers-test
-  (:require [clojure.test :refer :all]
-            [zebra.customers :as customers]
-            [zebra.sources :as sources]
-            [zebra.payment-methods :as payment-methods]
-            [zebra.helpers.constants :refer [api-key tokens]])
-  (:import (com.stripe.model PaymentMethod)))
-
+  (:require
+    [clojure.test :refer :all]
+    [zebra.customers :as customers]
+    [zebra.helpers.constants :refer [api-key tokens]]
+    [zebra.payment-methods :as payment-methods]
+    [zebra.sources :as sources])
+  (:import
+    (com.stripe.model
+      PaymentMethod)))
 
 (deftest create-customer
   (let [customer (customers/create api-key)]

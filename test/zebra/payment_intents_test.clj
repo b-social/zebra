@@ -1,10 +1,11 @@
 (ns zebra.payment-intents-test
-  (:require [clojure.test :refer :all]
-            [clojure.string :as str]
-            [zebra.payment-methods :as payment-methods]
-            [zebra.payment-intents :as payment-intent]
-            [zebra.customers :as customers]
-            [zebra.helpers.constants :refer [api-key tokens]]))
+  (:require
+    [clojure.string :as str]
+    [clojure.test :refer :all]
+    [zebra.customers :as customers]
+    [zebra.helpers.constants :refer [api-key tokens]]
+    [zebra.payment-intents :as payment-intent]
+    [zebra.payment-methods :as payment-methods]))
 
 (deftest create-payment-intent
   (let [customer (customers/create api-key)
@@ -19,7 +20,7 @@
       (is (str/starts-with? (:id payment-intent) "pi_"))
       (is (= (:object payment-intent) "payment_intent"))
       (is (str/starts-with? (:client_secret payment-intent)
-            (str (:id payment-intent) "_secret_"))))))
+                            (str (:id payment-intent) "_secret_"))))))
 
 (deftest create-and-confirm-payment-intent
   (let [payment-method (payment-methods/create
@@ -47,7 +48,7 @@
       (is (= (:amount confirmed-payment-intent) 2000))
       (is (= (:currency confirmed-payment-intent) "usd"))
       (is (= (:payment_method confirmed-payment-intent)
-            (:id payment-method))))))
+             (:id payment-method))))))
 
 (deftest create-and-confirm-payment-intent-3d-secure
   (let [payment-method (payment-methods/create
@@ -110,7 +111,7 @@
       (is (= (:amount confirmed-payment-intent) 2000))
       (is (= (:currency confirmed-payment-intent) "usd"))
       (is (= (:payment_method confirmed-payment-intent)
-            (:id payment-method))))))
+             (:id payment-method))))))
 
 (deftest retrieve-payment-intent
   (let [payment-intent (payment-intent/create
@@ -134,9 +135,9 @@
                          api-key)
         description "Double Espresso"
         payment-intent2 (payment-intent/update (:id payment-intent)
-                          ;; TODO: description is only supported in >= 8.0.0
-                          {:statement_descriptor description}
-                          api-key)]
+                                               ;; TODO: description is only supported in >= 8.0.0
+                                               {:statement_descriptor description}
+                                               api-key)]
 
     (testing "should be the same payment intent"
       (is (= (:id payment-intent2) (:id payment-intent))))
