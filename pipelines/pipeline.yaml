@@ -1,0 +1,120 @@
+resource_types:
+  - name: slack-notification
+    type: docker-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+      tag: latest
+    check_every: 12h
+
+resources:
+  - name: source
+    type: git
+    source:
+      uri: git@github.com:mypulse-uk/zebra.git
+      branch: master
+      private_key: ((git_ssh_key))
+
+  - name: application-builder-image
+    type: docker-image
+    source:
+      repository: ((application_builder_image_repository_url))
+      tag: ((application_builder_image_tag))
+
+  - name: notify-success
+    type: slack-notification
+    source:
+      url: ((slack_builds_webhook_url))
+
+  - name: notify-failure
+    type: slack-notification
+    source:
+      url: ((slack_development_webhook_url))
+
+  - name: version
+    type: semver
+    source:
+      driver: git
+      uri: git@github.com:mypulse-uk/zebra.git
+      branch: version
+      file: version
+      private_key: ((git_ssh_key))
+
+jobs:
+  - name: build
+    plan:
+      - in_parallel:
+        - get: source
+          trigger: true
+        - get: application-builder-image
+      - task: build
+        file: source/pipelines/build/task.yaml
+        image: application-builder-image
+
+    on_success: &on_success
+      put: notify-success
+      params:
+        text: ((slack_success_message))
+        channel: ((slack_success_channel))
+
+    on_failure: &on_failure
+      put: notify-failure
+      params:
+        text: ((slack_failure_message))
+        channel: ((slack_failure_channel))
+
+    on_error: &on_error
+      put: notify-failure
+      params:
+        text: ((slack_error_message))
+        channel: ((slack_error_channel))
+
+    on_abort: &on_abort
+      put: notify-failure
+      params:
+        text: ((slack_abort_message))
+        channel: ((slack_abort_channel))
+
+  - name: test
+    serial: true
+    plan:
+      - in_parallel:
+        - get: source
+          trigger: true
+          passed:
+            - build
+        - get: application-builder-image
+      - task: test
+        file: source/pipelines/test/task.yaml
+        image: application-builder-image
+        params:
+          VAULT_APPROLE_ROLE_ID: ((ci_secrets_role_id))
+          VAULT_APPROLE_SECRET_ID: ((ci_secrets_secret_id))
+
+    on_success: *on_success
+    on_failure: *on_failure
+    on_error: *on_error
+    on_abort: *on_abort
+
+  - name: publish-library
+    serial: true
+    plan:
+      - get: version
+        params: {bump: patch}
+      - get: source
+        trigger: true
+        passed:
+          - test
+      - get: application-builder-image
+      - put: version
+        params: {file: version/version}
+      - task: publish-library
+        file: source/pipelines/publish-library/task.yaml
+        image: application-builder-image
+        params:
+          CLOJARS_DEPLOY_USERNAME: ((clojars_deploy_username))
+          CLOJARS_DEPLOY_TOKEN: ((clojars_deploy_token))
+
+    on_success: *on_success
+    on_failure: *on_failure
+    on_error: *on_error
+    on_abort: *on_abort

@@ -1,0 +1,8 @@
+{:files
+ {:ignore #{"target" ".git" "config"}}
+
+ :rules
+ {:blank-lines {:max-consecutive 1
+                :padding-lines 1}
+  :types {:types? false
+          :protocols? false}}}

@@ -1,13 +1,34 @@
-/target
-/classes
-/checkouts
-pom.xml
-pom.xml.asc
-*.jar
-*.class
-/.lein-*
-/.nrepl-port
-.hgignore
-.hg/
-.idea
-zebra.iml
+# vim
+*.swp
+*.swo
+
+# IntelliJ
+.idea/
+*.ipr
+*.iml
+*.iws
+
+# Build
+/vendor/
+/build/
+/target/
+dist/
+.clj-kondo/.cache
+
+# OS
+.DS_Store
+
+# Temporary
+run/pids/
+run/logs/
+*.log
+.tmp
+.rakeTasks
+
+# Terraform
+.terraform
+.nrepl-port
+
+# Leiningen
+.lein-repl-history
+.lein-env
