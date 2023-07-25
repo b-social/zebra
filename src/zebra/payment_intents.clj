@@ -1,20 +1,27 @@
 (ns zebra.payment-intents
   (:refer-clojure :exclude [update])
-  (:require [zebra.utils :refer [transform-params]]
-            [clojure.walk :refer [keywordize-keys]])
-  (:import [com.stripe.model PaymentIntent PaymentIntent$NextAction]
-           [com.stripe.net RequestOptions]
-           [java.util Map]))
+  (:require
+    [clojure.walk :refer [keywordize-keys]]
+    [zebra.utils :refer [transform-params]])
+  (:import
+    (com.stripe.model
+      PaymentIntent
+      PaymentIntent$NextAction)
+    (com.stripe.net
+      RequestOptions)
+    (java.util
+      Map)))
 
-
-(defn next-action->map [^PaymentIntent$NextAction next-action]
+(defn next-action->map
+  [^PaymentIntent$NextAction next-action]
   (merge
     {:type (.getType next-action)}
     (when-let [redirect-to-url (.getRedirectToUrl next-action)]
       {:redirect_to_url {:return_url (.getReturnUrl redirect-to-url)
                          :url        (.getUrl redirect-to-url)}})))
 
-(defn payment-intent->map [^PaymentIntent x]
+(defn payment-intent->map
+  [^PaymentIntent x]
   (merge
     {:id                   (.getId x)
      :customer             (.getCustomer x)
@@ -31,7 +38,7 @@
      :payment_method       (.getPaymentMethod x)
      :client_secret        (.getClientSecret x)
      :capture_method       (.getCaptureMethod x)
-     :metadata             (clojure.walk/keywordize-keys
+     :metadata             (keywordize-keys
                              (into {} (.getMetadata x)))}
     (when-let [next-action (.getNextAction x)]
       {:next_action
@@ -41,13 +48,13 @@
   [params api-key]
   (payment-intent->map
     (PaymentIntent/create ^Map (transform-params params)
-      (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+                          (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
 
 (defn retrieve
   [id api-key]
   (payment-intent->map
     (PaymentIntent/retrieve id
-      (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+                            (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
 
 (defn update
   [id params api-key]

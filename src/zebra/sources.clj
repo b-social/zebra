@@ -1,10 +1,15 @@
 (ns zebra.sources
   (:refer-clojure :exclude [update])
-  (:require [zebra.utils :refer [transform-params
-                                 transform-type-data]])
-  (:import [com.stripe.model Source Source$Card]
-           [com.stripe.net RequestOptions]
-           [java.util Map]))
+  (:require
+    [zebra.utils :refer [transform-params]])
+  (:import
+    (com.stripe.model
+      Source
+      Source$Card)
+    (com.stripe.net
+      RequestOptions)
+    (java.util
+      Map)))
 
 (def three-d-secure-requirements
   {:required      "required"
@@ -17,7 +22,8 @@
    :chargeable "chargeable"
    :failed     "failed"})
 
-(defn- card-source->map [^Source$Card card]
+(defn- card-source->map
+  [^Source$Card card]
   {:address_line1_check (.getAddressLine1Check card)
    :address_zip_check   (.getAddressZipCheck card)
    :brand               (.getBrand card)
@@ -33,7 +39,8 @@
    :three_d_secure      (.getThreeDSecure card)
    :tokenization_method (.getTokenizationMethod card)})
 
-(defn source->map [^Source source]
+(defn source->map
+  [^Source source]
   (merge
     {:id       (.getId source)
      :customer (.getCustomer source)
@@ -54,7 +61,7 @@
   [params api-key]
   (source->map
     (Source/create ^Map (transform-params params)
-      (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+                   (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
 
 (defn create-old
   [params api-key]
@@ -62,7 +69,7 @@
     ;; TODO: Why does this catch the exception?
     (source->map
       (Source/create ^Map (transform-params params)
-        (-> (RequestOptions/builder) (.setApiKey api-key) .build)))
+                     (-> (RequestOptions/builder) (.setApiKey api-key) .build)))
     (catch Exception e
       (throw (ex-info "Failed to create stripe source" {:error e})))))
 
@@ -70,4 +77,4 @@
   [id api-key]
   (source->map
     (Source/retrieve id
-      (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+                     (-> (RequestOptions/builder) (.setApiKey api-key) .build))))

@@ -1,11 +1,16 @@
 (ns zebra.payment-methods
-  (:require [zebra.utils :refer [transform-params
-                                 transform-type-data]])
-  (:import [com.stripe.model PaymentMethod]
-           [com.stripe.net RequestOptions]
-           [java.util Map]))
+  (:require
+    [zebra.utils :refer [transform-params]])
+  (:import
+    (com.stripe.model
+      PaymentMethod)
+    (com.stripe.net
+      RequestOptions)
+    (java.util
+      Map)))
 
-(defn payment-method->map [^PaymentMethod x]
+(defn payment-method->map
+  [^PaymentMethod x]
   (with-meta (merge
                {:id     (.getId x)
                 :object (.getObject x)}
@@ -16,18 +21,18 @@
                          :funding   (.getFunding card)
                          :last4     (.getLast4 card)
                          :three_d_secure_usage
-                                    {:supported
-                                     (-> card .getThreeDSecureUsage .getSupported)}}}))
-             {:original x}))
+                         {:supported
+                          (-> card .getThreeDSecureUsage .getSupported)}}}))
+    {:original x}))
 
 (defn create
   [params api-key]
   (payment-method->map
     (PaymentMethod/create ^Map (transform-params params)
-      (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+                          (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
 
 (defn retrieve
   [id api-key]
   (payment-method->map
     (PaymentMethod/retrieve id
-      (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+                            (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
