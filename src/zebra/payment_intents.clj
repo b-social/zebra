@@ -21,26 +21,26 @@
                          :url        (.getUrl redirect-to-url)}})))
 
 (defn payment-intent->map
-  [^PaymentIntent x]
+  [^PaymentIntent intent]
   (merge
-    {:id                   (.getId x)
-     :customer             (.getCustomer x)
-     :object               (.getObject x)
-     :status               (.getStatus x)
-     :description          (.getDescription x)
-     :statement_descriptor (.getStatementDescriptor x)
-     :confirmation_method   (.getConfirmationMethod x)
-     :payment_method_types (into [] (.getPaymentMethodTypes x))
-     :amount               (.getAmount x)
-     :amount_capturable    (.getAmountCapturable x)
-     :amount_received      (.getAmountReceived x)
-     :currency             (.getCurrency x)
-     :payment_method       (.getPaymentMethod x)
-     :client_secret        (.getClientSecret x)
-     :capture_method       (.getCaptureMethod x)
-     :metadata             (keywordize-keys
-                             (into {} (.getMetadata x)))}
-    (when-let [next-action (.getNextAction x)]
+    {:id (.getId intent)
+     :customer (.getCustomer intent)
+     :object (.getObject intent)
+     :status (.getStatus intent)
+     :description (.getDescription intent)
+     :statement_descriptor (.getStatementDescriptor intent)
+     :confirmation_method (.getConfirmationMethod intent)
+     :payment_method_types (into [] (.getPaymentMethodTypes intent))
+     :amount (.getAmount intent)
+     :amount_capturable (.getAmountCapturable intent)
+     :amount_received (.getAmountReceived intent)
+     :currency (.getCurrency intent)
+     :payment_method (.getPaymentMethod intent)
+     :client_secret (.getClientSecret intent)
+     :capture_method (.getCaptureMethod intent)
+     :metadata (keywordize-keys
+                 (into {} (.getMetadata intent)))}
+    (when-let [next-action (.getNextAction intent)]
       {:next_action
        (next-action->map next-action)})))
 
