@@ -3,6 +3,7 @@
     [zebra.charges :as charges]
     [zebra.customers :as customers]
     [zebra.ephemeral-keys :as ephemeral-keys]
+    [zebra.invoices :as invoices]
     [zebra.payment-intents :as payment-intents]
     [zebra.payment-methods :as payment-methods]
     [zebra.sources :as sources])
@@ -99,3 +100,15 @@
 (defn confirm-payment-intent
   [id api-key]
   (payment-intents/confirm id api-key))
+
+;; Invoices
+
+(defn create-invoice
+  ([params api-key]
+   (invoices/create params api-key))
+  ([api-key]
+   (create-invoice {} api-key)))
+
+(defn retrieve-invoice
+  [id api-key]
+  (invoices/retrieve id api-key))
