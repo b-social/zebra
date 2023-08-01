@@ -114,6 +114,10 @@
   [id api-key]
   (invoices/retrieve id api-key))
 
+(defn finalise-invoice
+  [id api-key]
+  (invoices/finalise id api-key))
+
 ;; Refunds
 
 (defn create-refund

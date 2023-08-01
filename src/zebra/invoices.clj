@@ -13,7 +13,8 @@
   [^Invoice invoice]
   {:id       (.getId invoice)
    :customer (.getCustomer invoice)
-   :metadata (.getMetadata invoice)})
+   :metadata (.getMetadata invoice)
+   :payment_intent  (.getPaymentIntent invoice)})
 
 (defn create
   ([^Map params api-key]
@@ -34,3 +35,11 @@
       (-> (RequestOptions/builder)
           (.setApiKey api-key)
           .build))))
+
+(defn finalise
+  [id api-key]
+  (let [opts (-> (RequestOptions/builder) (.setApiKey api-key) .build)
+        invoice (Invoice/retrieve id opts)
+        finalised-invoice (.finalizeInvoice invoice opts)]
+    (invoice->map
+      finalised-invoice)))
