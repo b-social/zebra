@@ -1,25 +1,26 @@
-(ns zebra.invoices
-  (:require
-    [zebra.utils :refer [transform-params]])
+(ns zebra.refunds
   (:import
     (com.stripe.model
-      Invoice)
+      Refund)
     (com.stripe.net
       RequestOptions)
     (java.util
       Map)))
 
-(defn invoice->map
-  [^Invoice invoice]
-  {:id       (.getId invoice)
-   :customer (.getCustomer invoice)
-   :metadata (.getMetadata invoice)})
+(defn refund->map
+  [^Refund refund]
+  {:id             (.getId refund)
+   :payment_intent (.getPaymentIntent refund)
+   :metadata       (.getMetadata refund)
+   :amount         (.getAmount refund)
+   :status         (.getStatus refund)
+   :reason         (.getReason refund)})
 
 (defn create
   ([^Map params api-key]
-   (invoice->map
-     (Invoice/create
-       ^Map (transform-params params)
+   (refund->map
+     (Refund/create
+       params
        (-> (RequestOptions/builder)
            (.setApiKey api-key)
            .build))))
@@ -28,8 +29,8 @@
 
 (defn retrieve
   [id api-key]
-  (invoice->map
-    (Invoice/retrieve
+  (refund->map
+    (Refund/retrieve
       id
       (-> (RequestOptions/builder)
           (.setApiKey api-key)

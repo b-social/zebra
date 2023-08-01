@@ -10,9 +10,9 @@
         value "some value"
         customer (customers/create api-key)
         invoice (invoices/create
-                  {"customer" (:id customer)
-                   "pending_invoice_items_behavior" "exclude"
-                   "metadata" {key value}}
+                  {:customer (:id customer)
+                   :pending_invoice_items_behavior "exclude"
+                   :metadata {key value}}
                   api-key)]
 
     (testing "should be a valid invoice"

@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [update])
   (:require
     [clojure.walk :refer [keywordize-keys]]
+    [zebra.charges :as charges]
     [zebra.utils :refer [transform-params]])
   (:import
     (com.stripe.model
@@ -27,6 +28,7 @@
      :customer (.getCustomer intent)
      :object (.getObject intent)
      :status (.getStatus intent)
+     :charges (map charges/charge->map (.getData (.getCharges intent)))
      :description (.getDescription intent)
      :statement_descriptor (.getStatementDescriptor intent)
      :confirmation_method (.getConfirmationMethod intent)

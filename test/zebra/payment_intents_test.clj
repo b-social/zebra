@@ -102,6 +102,9 @@
     (testing "should create a valid payment intent"
       (is (str/starts-with? (:id confirmed-payment-intent) "pi_"))
       (is (= (:object confirmed-payment-intent) "payment_intent"))
+      (is (= 1 (count (:charges confirmed-payment-intent))))
+      (is (= false (:refunded (first (:charges confirmed-payment-intent)))))
+      (is (= "succeeded" (:status (first (:charges confirmed-payment-intent)))))
       (is (= (:status confirmed-payment-intent) "requires_capture"))
       (is (= (:metadata confirmed-payment-intent) {:example "value"}))
       (is (= (:confirmation_method confirmed-payment-intent) "manual"))
