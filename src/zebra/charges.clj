@@ -18,7 +18,8 @@
 (defn charge->map
   [^Charge charge]
   {:id     (.getId charge)
-   :status (.getStatus charge)})
+   :status (.getStatus charge)
+   :refunded (.getRefunded charge)})
 
 (defn create
   [params api-key]

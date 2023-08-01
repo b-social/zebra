@@ -6,6 +6,7 @@
     [zebra.invoices :as invoices]
     [zebra.payment-intents :as payment-intents]
     [zebra.payment-methods :as payment-methods]
+    [zebra.refunds :as refunds]
     [zebra.sources :as sources])
   (:import
     (com.stripe
@@ -112,3 +113,13 @@
 (defn retrieve-invoice
   [id api-key]
   (invoices/retrieve id api-key))
+
+;; Refunds
+
+(defn create-refund
+  [params api-key]
+  (refunds/create params api-key))
+
+(defn retrieve-refund
+  [id api-key]
+  (refunds/retrieve id api-key))
