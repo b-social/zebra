@@ -26,7 +26,7 @@
                          api-key)
         confirmed-intent (payment-intents/confirm (:id payment-intent) api-key)
 
-        amount 1000
+        amount 2000
         currency "usd"
         reason "requested_by_customer"
 
