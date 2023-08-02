@@ -11,6 +11,7 @@
   [^Refund refund]
   {:id             (.getId refund)
    :payment_intent (.getPaymentIntent refund)
+   :currency       (.getCurrency refund)
    :metadata       (.getMetadata refund)
    :amount         (.getAmount refund)
    :status         (.getStatus refund)

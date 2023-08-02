@@ -25,13 +25,24 @@
                           :customer (:id customer)}
                          api-key)
         confirmed-intent (payment-intents/confirm (:id payment-intent) api-key)
+
+        amount 1000
+        currency "usd"
+        reason "requested_by_customer"
+
         refund (refunds/create
                  {"payment_intent" (:id confirmed-intent)
-                  "metadata" {key value}}
+                  "metadata" {key value}
+                  "amount" amount
+                  "reason" reason}
                  api-key)]
 
     (testing "should be a valid refund"
       (is (some? (:id refund)))
+      (is (= amount (:amount refund)))
+      (is (= currency (:currency refund)))
+      (is (= reason (:reason refund)))
+      (is (= "succeeded" (:status refund)))
       (testing "with valid metadata"
         (is (= value (get-in refund [:metadata key])))))
 
