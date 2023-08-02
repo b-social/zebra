@@ -28,7 +28,10 @@
      :customer (.getCustomer intent)
      :object (.getObject intent)
      :status (.getStatus intent)
-     :charges (map charges/charge->map (.getData (.getCharges intent)))
+     :charges (map charges/charge->map
+                   (when
+                     (.getCharges intent)
+                     (.getData (.getCharges intent))))
      :description (.getDescription intent)
      :statement_descriptor (.getStatementDescriptor intent)
      :confirmation_method (.getConfirmationMethod intent)
