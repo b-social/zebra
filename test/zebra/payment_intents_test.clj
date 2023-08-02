@@ -1,11 +1,19 @@
 (ns zebra.payment-intents-test
   (:require
     [clojure.string :as str]
-    [clojure.test :refer :all]
+    [clojure.test :refer [deftest is testing]]
     [zebra.customers :as customers]
-    [zebra.helpers.constants :refer [api-key tokens]]
+    [zebra.helpers.constants :refer [api-key]]
     [zebra.payment-intents :as payment-intent]
-    [zebra.payment-methods :as payment-methods]))
+    [zebra.payment-methods :as payment-methods]
+    [zebra.utils :refer [transform-params]])
+  (:import
+    (com.stripe.model
+      PaymentIntent)
+    (com.stripe.net
+      RequestOptions)
+    (java.util
+      Map)))
 
 (deftest create-payment-intent
   (let [customer (customers/create api-key)
@@ -21,6 +29,20 @@
       (is (= (:object payment-intent) "payment_intent"))
       (is (str/starts-with? (:client_secret payment-intent)
                             (str (:id payment-intent) "_secret_"))))))
+
+(deftest parses-payment-intent-without-charges
+  (let [customer (customers/create api-key)
+
+        payment-intent
+        (PaymentIntent/create
+          ^Map (transform-params {:amount               2000
+                                  :currency             "usd"
+                                  :payment_method_types ["card"]
+                                  :customer (:id customer)})
+          (-> (RequestOptions/builder) (.setApiKey api-key) .build))]
+    (.setCharges payment-intent nil)
+    (testing "should not throw an exception when charges are null"
+      (payment-intent/payment-intent->map payment-intent))))
 
 (deftest create-and-confirm-payment-intent
   (let [payment-method (payment-methods/create
