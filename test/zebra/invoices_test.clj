@@ -34,7 +34,9 @@
           (testing "with a valid customer"
             (is (= (:id customer) (:customer retrieved-invoice)))))
         (testing "with valid metadata"
-          (is (= value (get-in invoice [:metadata key]))))))))
+          (is (= value (get-in invoice [:metadata key]))))
+        (testing "contains a total"
+          (is (= 0 (:total invoice))))))))
 
 (deftest finalise-invoice
   (let [customer (customers/create api-key)
