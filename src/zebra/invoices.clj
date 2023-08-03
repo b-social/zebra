@@ -14,7 +14,8 @@
   {:id       (.getId invoice)
    :customer (.getCustomer invoice)
    :metadata (.getMetadata invoice)
-   :payment_intent  (.getPaymentIntent invoice)})
+   :payment_intent  (.getPaymentIntent invoice)
+   :total (.getTotal invoice)})
 
 (defn create
   ([^Map params api-key]
