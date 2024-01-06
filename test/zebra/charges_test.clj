@@ -1,9 +1,10 @@
 (ns zebra.charges-test
-  (:require [clojure.test :refer :all])
-  (:require [zebra.charges :as charges]
-            [zebra.customers :as customers]
-            [zebra.sources :as sources]
-            [zebra.helpers.constants :refer [api-key tokens]]))
+  (:require
+    [clojure.test :refer :all]
+    [zebra.charges :as charges]
+    [zebra.customers :as customers]
+    [zebra.helpers.constants :refer [api-key tokens]]
+    [zebra.sources :as sources]))
 
 (deftest create-charge
   (let [customer (customers/create api-key)

@@ -1,8 +1,9 @@
 (ns zebra.ephemeral-keys-test
-  (:require [clojure.test :refer :all]
-            [zebra.ephemeral-keys :as ephemeral-keys]
-            [zebra.customers :as customers]
-            [zebra.helpers.constants :refer [api-key]]))
+  (:require
+    [clojure.test :refer :all]
+    [zebra.customers :as customers]
+    [zebra.ephemeral-keys :as ephemeral-keys]
+    [zebra.helpers.constants :refer [api-key]]))
 
 (deftest create-source
   (let [customer (customers/create api-key)

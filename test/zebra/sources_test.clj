@@ -1,8 +1,11 @@
 (ns zebra.sources-test
-  (:require [clojure.test :refer :all]
-            [zebra.sources :as sources]
-            [zebra.helpers.constants :refer [api-key tokens]])
-  (:import [com.stripe.exception InvalidRequestException]))
+  (:require
+    [clojure.test :refer :all]
+    [zebra.helpers.constants :refer [api-key tokens]]
+    [zebra.sources :as sources])
+  (:import
+    (com.stripe.exception
+      InvalidRequestException)))
 
 (deftest create-source
   (let [source (sources/create {:type  "card"
@@ -28,7 +31,7 @@
     (testing "should be a valid source"
       (is (some? (:id three-d-secure-source)))
       (is (= (:status three-d-secure-source)
-            (:pending sources/status-codes))))))
+             (:pending sources/status-codes))))))
 
 (deftest error-creating-three-d-secure-source
   (let [card-source (sources/create

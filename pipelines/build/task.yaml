@@ -1,0 +1,13 @@
+---
+platform: linux
+
+inputs:
+  - name: source
+outputs:
+  - name: dist
+run:
+  dir: ./source
+  path: ./pipelines/build/task.sh
+
+caches:
+  - path: cache
